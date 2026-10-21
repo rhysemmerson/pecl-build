@@ -100,7 +100,7 @@ main() {
     pecl_url=https://pecl.php.net/get
     url=$pecl_url/$package
 
-    tarball=$(curl -I $url 2>/dev/null |grep -i Content-disposition |cut -d'=' -f2 |tr -d \")
+    tarball=$(curl --connect-timeout 60 --max-time 300 -I $url 2>/dev/null |grep -i Content-disposition |cut -d'=' -f2 |tr -d \")
     package_name=${tarball%.*}
     extension=${package_name%-*}
     version=${package_name##*-}
@@ -122,7 +122,7 @@ main() {
 
     # fetch package
     info "fetch package: $(green $url)"
-    run curl $url \| tar xzf - -C $build_dir
+    run curl --connect-timeout 60 --max-time 600 $url \| tar xzf - -C $build_dir
 
     # build package
     info "build package"
